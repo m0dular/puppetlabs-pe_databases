@@ -30,7 +30,7 @@ class pe_databases (
   if $facts.dig('pe_databases', 'have_systemd') {
     if $manage_database_maintenance and (versioncmp('2019.0.2', $facts['pe_server_version']) <= 0) {
       class {'pe_databases::pg_repack':
-        disable_maintenance => lookup('pe_databases::maintenance::disable_maintenance', {'default_value' => false}),
+        disable_maintenance => lookup('pe_databases::disable_maintenance', {'default_value' => false}),
       }
       if $manage_table_settings {
         # This is to provide for situations, like PE XL,
