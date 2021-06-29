@@ -63,6 +63,11 @@ class pe_databases::backup (
     refreshonly => true,
   }
 
+  $cron_ensure = $disable_maintenance ? {
+    false => 'present',
+    default => 'absent',
+  }
+
   # Since the cron job titles below include the array ('databases') of database names,
   # the crontab for pe-postgres needs to be reset if the array of database names changes,
   # otherwise the change create a new cron job and unmanage the old cron job.
@@ -73,7 +78,7 @@ class pe_databases::backup (
     $databases_to_backup = $database_backup_set['databases']
     $databases = join($databases_to_backup, ' ')
     cron { "puppet_enterprise_database_backup_${databases_to_backup}":
-      ensure  => present,
+      ensure  => $cron_ensure,
       command => "${backup_script_path} -l ${backup_logging_directory} -t ${backup_directory} -r ${retention_policy} ${databases}",
       user    => 'pe-postgres',
       minute  => $database_backup_set['schedule']['minute'],
