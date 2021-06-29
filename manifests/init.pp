@@ -48,6 +48,8 @@ class pe_databases (
         loglevel => warning,
       }
     }
+    notify {"I am here": }
+    notify {"backup: ${manage_database_backups}": }
     if $manage_database_backups {
       class { 'pe_databases::backup':
         disable_maintenance => ! $manage_database_backups,
