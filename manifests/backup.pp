@@ -29,6 +29,7 @@ class pe_databases::backup (
   String  $daily_databases_path     = "${pe_databases::install_dir}/default_daily_databases.txt",
   String  $backup_logging_directory = '/var/log/puppetlabs/pe_databases_backup',
   Integer $retention_policy         = 2,
+  Boolean $disable_maintenance      = true,
 ) {
 
   file { $backup_logging_directory :

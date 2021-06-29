@@ -3,8 +3,10 @@
 # @summary Tuning, maintenance, and backups for PE PostgreSQL.
 
 class pe_databases (
-  Boolean $manage_database_backups     = false,
+  Boolean $manage_database_backups     = undef,
+  # Manage the inclusion of the pg_repack class
   Boolean $manage_database_maintenance = true,
+  # Manage the state of the maintenance tasks, i.e. systemd services and timers
   Boolean $disable_maintenance         = lookup('pe_databases::disable_maintenance', {'default_value' => false}),
   Boolean $manage_postgresql_settings  = true,
   Boolean $manage_table_settings       = true,
@@ -39,15 +41,16 @@ class pe_databases (
         # In PE XL, the Master and Replica run PostgreSQL for all databases *except* for pe-puppetdb.
         include pe_databases::postgresql_settings::table_settings
       }
-
-      if $manage_database_backups {
-        include pe_databases::backup
-      }
     }
     else {
       notify { 'pe_databases_version_warn':
         message  => 'This module only supports PE 2019.0.2 and later',
         loglevel => warning,
+      }
+    }
+    if $manage_database_backups {
+      class { 'pe_databases::backup':
+        disable_maintenance => ! $manage_database_backups,
       }
     }
   }
