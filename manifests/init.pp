@@ -3,7 +3,7 @@
 # @summary Tuning, maintenance, and backups for PE PostgreSQL.
 
 class pe_databases (
-  Boolean $manage_database_backups     = undef,
+  Variant[Boolean,Undef] $manage_database_backups     = undef,
   # Manage the inclusion of the pg_repack class
   Boolean $manage_database_maintenance = true,
   # Manage the state of the maintenance tasks, i.e. systemd services and timers
