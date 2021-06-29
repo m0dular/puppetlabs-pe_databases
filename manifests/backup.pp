@@ -67,6 +67,7 @@ class pe_databases::backup (
     false => 'present',
     default => 'absent',
   }
+  notify {"cron_ensure: ${cron_ensure}: "}
 
   # Since the cron job titles below include the array ('databases') of database names,
   # the crontab for pe-postgres needs to be reset if the array of database names changes,
